@@ -20,9 +20,36 @@ Gemfile.lock
 
 # Other files
 # Ignore build output directories
-obj/
-bin/
+# obj/
+# bin/
 
 # Ignore project and solution files
-learn_Csharp.csproj
-learn_Csharp.sln
+# learn_Csharp.csproj
+# learn_Csharp.sln
+
+*
+!*.cs
+!*.txt
+!README.md
+!LICENSE
+
+
+
+
+## Rules
+# Ignoring:
+#     * Files: 
+#         filename.ext
+#     * Directories: 
+#         directory/
+#     * All files with an extension: 
+#         *.log
+#     * Files in subdirectories: 
+#         **/filename.ext
+#     * Everithing in a directory except one file: 
+#         directory/*
+#         !directory/keepme.txt
+#     * All files except those matching a pattern: 
+#         *
+#         !*.cs
+    
