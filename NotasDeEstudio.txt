@@ -3,3 +3,16 @@
 	https://learn.microsoft.com/en-us/training/modules/csharp-call-methods/4-exercise-return-values-input-parameters
 	
 	
+	Angular certifications: 
+	
+	1. freeCodeCamp (YouTube Course)
+		https://www.freecodecamp.org/news/angular-for-beginners-course/
+		
+	2. Simplilearn – Angular Basics (Free with Certificate)
+		https://www.simplilearn.com/learn-angular-basics-free-course-skillup
+	
+	3. Coursera – Angular Courses
+		https://www.coursera.org/courses?query=angular
+		
+	4. ScholarHat – Angular Course (Free with Certificate)
+		https://www.scholarhat.com/free-course/angular-course
