@@ -1,52 +1,38 @@
-﻿// Exercise - Create decision logic with if statements
-// Program a dice game with if statement
+﻿// Exercise - Complete a challenge activity to apply business rules
 
+Random random = new Random();
+int daysUntilExpiration = random.Next(12);
+int discountPercentage = 0;
 
-Random dice = new Random();
+Console.WriteLine($"Days until expiration: {daysUntilExpiration}");
 
-int roll1 = dice.Next(1, 7);
-int roll2 = dice.Next(1, 7);
-int roll3 = dice.Next(1, 7);
-
-// int roll1 = 6;
-// int roll2 = 6;
-// int roll3 = 6;
-
-int total = roll1 + roll2 + roll3;
-
-Console.WriteLine($"Dice roll: {roll1} + {roll2} + {roll3} = {total}");
-
-if ((roll1 == roll2) && (roll2 == roll3))
+if (daysUntilExpiration <= 10)
 {
-    Console.WriteLine("You rolled triples! +6 bonus to total");
-    total += 6;
+    if (daysUntilExpiration == 0)
+    {
+        Console.WriteLine("Your subscription has expired.");
+    }
+
+    else if (daysUntilExpiration == 1)
+    {
+        Console.WriteLine("Your subscription expires within a day!");
+        discountPercentage = 20;
+        Console.WriteLine($"Renew now and save {discountPercentage}%!");
+    }
+
+    else if (1 < daysUntilExpiration && daysUntilExpiration <= 5)
+    {
+        Console.WriteLine($"Your subscription expires in {daysUntilExpiration} days.");
+        discountPercentage = 10;
+        Console.WriteLine($"Renew now and save {discountPercentage}%!");
+    }
+
+    else
+    {
+        Console.WriteLine($"Your subscription will expire soon. Renew now!");
+    }
 }
 
-else if ((roll1 == roll2) || (roll2 == roll3) || (roll1 == roll3))
-{
-    Console.WriteLine("You rolled doubles! +2 bonus to total");
-    total += 2;
-}
-
-Console.WriteLine($"Your total including the bonus: {total}");
 
 
-if (16 <= total)
-{
-    Console.WriteLine("You win a new car!");
-}
 
-else if (10 <= total)
-{
-    Console.WriteLine("You win a new laptop!");
-}
-
-else if (7 == total)
-{
-    Console.WriteLine("You win a trip for two!");
-}
-
-else
-{
-    Console.WriteLine("You win a kitten!");
-}
