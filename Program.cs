@@ -1,23 +1,21 @@
-﻿// Exercise - Implement the foreach statement
+﻿// Exercise - Complete a challenge activity for nested iteration and selection statements
 
-//string[] names = { "Rowena", "Robin", "Bao" };
+string[] fraudulentOrderIDs =
+[   "B123",
+    "C234",
+    "A345",
+    "C15",
+    "B177",
+    "G3003",
+    "C235",
+    "B179"
+];
 
-// foreach (string name in names)
-// {
-//     Console.WriteLine(name);
-// }
 
-
-int[] inventory = { 200, 450, 700, 175, 250 };
-
-int sum = 0;
-int bin = 0;
-
-foreach (int items in inventory)
+foreach (string orderID in fraudulentOrderIDs)
 {
-    sum += items;
-    bin++;
-    Console.WriteLine($"Bin {bin} = {items} items (Running total: {sum})");
+    if (orderID.StartsWith("B"))
+    {
+        Console.WriteLine(orderID);
+    }
 }
-
-Console.WriteLine($"We have {sum} items in inventory.");
