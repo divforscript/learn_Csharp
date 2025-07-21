@@ -1,38 +1,25 @@
-﻿// Exercise - Complete a challenge activity to apply business rules
+﻿// Exercise - Get started with array basics
 
-Random random = new Random();
-int daysUntilExpiration = random.Next(12);
-int discountPercentage = 0;
+/*
+string[] fraudulentOrderIDs = new string[3];
 
-Console.WriteLine($"Days until expiration: {daysUntilExpiration}");
+fraudulentOrderIDs[0] = "A123";
+fraudulentOrderIDs[1] = "B456";
+fraudulentOrderIDs[2] = "C789";
+// fraudulentOrderIDs[3] = "D000";
+*/
 
-if (daysUntilExpiration == 0)
-{
-    Console.WriteLine("Your subscription has expired.");
-}
+string[] fraudulentOrderIDs = [ "A123", "B456", "C789" ];
 
-else if (daysUntilExpiration == 1)
-{
-    Console.WriteLine("Your subscription expires within a day!");
-    discountPercentage = 20;
-}
+Console.WriteLine($"First: {fraudulentOrderIDs[0]}");
+Console.WriteLine($"Second: {fraudulentOrderIDs[1]}");
+Console.WriteLine($"Third: {fraudulentOrderIDs[2]}");
 
-else if (daysUntilExpiration <= 5)
-{
-    Console.WriteLine($"Your subscription expires in {daysUntilExpiration} days.");
-    discountPercentage = 10;
+fraudulentOrderIDs[0] = "F000";
 
-}
+Console.WriteLine($"Reassign First: {fraudulentOrderIDs[0]}");
 
-else if(daysUntilExpiration <= 10)
-{
-    Console.WriteLine($"Your subscription will expire soon. Renew now!");
-}
-
-if (0 < discountPercentage)
-{
-    Console.WriteLine($"Renew now and save {discountPercentage}%!");
-}
+Console.WriteLine($"There are {fraudulentOrderIDs.Length} fraudulent orders to process.");
 
 
 
