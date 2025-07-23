@@ -16,3 +16,14 @@
 		
 	4. ScholarHat – Angular Course (Free with Certificate)
 		https://www.scholarhat.com/free-course/angular-course
+		
+23-07-2025:
+	Es obligatorio inicializar una variable en C# antes de utilizarla?
+	Depende. Si se trata de una variable local o es un campo (explicar en post).
+	
+	Valores por defecto:
+		int = 0
+		string = null
+		bool = false
+		decimal = 0.0m
+		object = null
