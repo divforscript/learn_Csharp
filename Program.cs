@@ -1,38 +1,34 @@
 ﻿using System;
 
-/*  Exercise: Update the final grade calculation program creating
-arrays and foreach loops
+/* 
+This C# console application is designed to:
+- Use arrays to store student names and assignment scores.
+- Use a `foreach` statement to iterate through the student names as an outer program loop.
+- Use an `if` statement within the outer loop to identify the current student name and access that student's assignment scores.
+- Use a `foreach` statement within the outer loop to iterate though the assignment scores array and sum the values.
+- Use an algorithm within the outer loop to calculate the average exam score for each student.
+- Use an `if-elseif-else` construct within the outer loop to evaluate the average exam score and assign a letter grade automatically.
+- Integrate extra credit scores when calculating the student's final score and letter grade as follows:
+    - detects extra credit assignments based on the number of elements in the student's scores array.
+    - divides the values of extra credit assignments by 10 before adding extra credit scores to the sum of exam scores.
+- use the following report format to report student grades: 
+
+    Student         Grade
+
+    Sophia:         92.2    A-
+    Andrew:         89.6    B+
+    Emma:           85.6    B
+    Logan:          91.2    A-
+
+
+    Final format:
+
+    Student         Exam Score      Overall Grade   Extra Credit
+
+    Sophia          92.2            95.88   A       92 (3.68 pts)
 */
 
-// initialize variables - graded assignments
-// int sophia1 = 90;
-// int sophia2 = 86;
-// int sophia3 = 87;
-// int sophia4 = 98;
-// int sophia5 = 100;
 
-// int andrew1 = 92;
-// int andrew2 = 89;
-// int andrew3 = 81;
-// int andrew4 = 96;
-// int andrew5 = 90;
-
-// int emma1 = 90;
-// int emma2 = 85;
-// int emma3 = 87;
-// int emma4 = 98;
-// int emma5 = 68;
-
-// int logan1 = 90;
-// int logan2 = 95;
-// int logan3 = 87;
-// int logan4 = 88;
-// int logan5 = 96;
-
-// sophiaSum = sophia1 + sophia2 + sophia3 + sophia4 + sophia5;
-// andrewSum = andrew1 + andrew2 + andrew3 + andrew4 + andrew5;
-// emmaSum = emma1 + emma2 + emma3 + emma4 + emma5;
-// loganSum = logan1 + logan2 + logan3 + logan4 + logan5;
 int examAssignments = 5;
 
 int[] sophiaScores = new int[] { 90, 86, 87, 98, 100, 94, 90 };
@@ -49,12 +45,11 @@ string[] studentNames = new string[] { "Sophia", "Andrew", "Emma", "Logan", "Bec
 
 int[] studentScores = new int[10];
 
-Console.WriteLine("Student\t\tGrade\n");
+Console.WriteLine($"{"Student",-12}{"Exam Score",-16}{"Overall Grade",-16}Extra Credit\n");
+
 foreach (string name in studentNames)
 {
-    int studentSum = 0;
-    decimal studentScore = 0;
-    string nameLetterGrade = "";
+    
 
     if (name == "Sophia")
     {
@@ -87,34 +82,46 @@ foreach (string name in studentNames)
 
     else if (name == "Gregor")
         studentScores = gregorScores;
-        
+
     else
         continue;
 
     // initialize/reset a counter for the number of assignments
     int gradedAssignments = 0;
+    int studentExamSum = 0;
+    int studentExtraSum = 0;
+    
     foreach (int score in studentScores)
     {
         gradedAssignments++;
 
         if (gradedAssignments <= examAssignments)
         {
-            studentSum += score;
+            studentExamSum += score;
         }
         else
         {
-            studentSum += score / 10;
+            studentExtraSum += score;
         }
     }
 
-    studentScore = (decimal)studentSum / examAssignments;
+    decimal studentExamScore = 0.0m;
+    studentExamScore = (decimal)studentExamSum / examAssignments;
+
+    decimal studentScore = 0;
+    studentScore = (decimal)(studentExamSum + 0.1 * studentExtraSum) / examAssignments;
+
+    decimal studentExtraScore = 0.0m;
+    studentExtraScore = (decimal)studentExtraSum / (gradedAssignments - examAssignments);
+
+    string nameLetterGrade = "";
 
     // Asgin grade letter based on studentScore rate:
     if (studentScore >= 97)
         nameLetterGrade = "A+";
 
     else if (studentScore >= 93)
-        nameLetterGrade = "A";
+        nameLetterGrade = "A ";
 
     else if (studentScore >= 90)
         nameLetterGrade = "A-";
@@ -123,7 +130,7 @@ foreach (string name in studentNames)
         nameLetterGrade = "B+";
 
     else if (studentScore >= 83)
-        nameLetterGrade = "B";
+        nameLetterGrade = "B ";
 
     else if (studentScore >= 80)
         nameLetterGrade = "B-";
@@ -132,7 +139,7 @@ foreach (string name in studentNames)
         nameLetterGrade = "C+";
 
     else if (studentScore >= 73)
-        nameLetterGrade = "C";
+        nameLetterGrade = "C ";
 
     else if (studentScore >= 70)
         nameLetterGrade = "C-";
@@ -141,21 +148,20 @@ foreach (string name in studentNames)
         nameLetterGrade = "D+";
 
     else if (studentScore >= 63)
-        nameLetterGrade = "D";
+        nameLetterGrade = "D ";
 
     else if (studentScore >= 60)
         nameLetterGrade = "D-";
 
     else
-        nameLetterGrade = "F";
+        nameLetterGrade = "F ";
 
-    Console.WriteLine($"{name}:\t\t{studentScore}\t{nameLetterGrade}");
+    Console.WriteLine($"{name + ":",-12}{studentExamScore,-16}{studentScore,-8:F2}{nameLetterGrade,-8}{studentExtraScore} ({studentScore - studentExamScore,0:F2} pts)");
 
 }
 
-Console.WriteLine("Press the Enter key to continue");
-Console.ReadLine();
+// Sophia:     92.2            95.88       A 92 (3.68 pts)
 
 
-
-
+// Student     Exam Score      Overall Grade    Extra Credit
+// Sophia:     92.2            95.88A          92 (3.68 pts)
