@@ -1,49 +1,30 @@
-﻿// Exercise: Complete a challenge activity using do and while iteration statements
+﻿// Exercise - Complete a challenge activity to differentiate between do and while iteration statements
 
-Random damage = new Random();
+// Code project 1 - write code that validates integer input
 
-string monsterCharacter = "Monster";
-int monsterHealth = 10;
+string? userInput;
+int numericValue = 0;
+bool validInput = false;
 
-string heroCharacter = "Hero";
-int heroHealth = 10;
+Console.WriteLine("Enter an integer value between 5 and 10");
 
-string currentTurn = heroCharacter;
-int nextCharacterHealth = 10;
-int healthLost = 0;
-
-
-string winner = "";
-
-//while (0 < monsterHealth && 0 < heroHealth)
-while (0 < nextCharacterHealth)
+do
 {
-    healthLost = damage.Next(1, 11);
+    userInput = Console.ReadLine();
+    validInput = int.TryParse(userInput, out numericValue);
 
-    if (currentTurn == heroCharacter)
+    if (!validInput)
     {
-        monsterHealth -= healthLost;
-        nextCharacterHealth = monsterHealth;
-        if (nextCharacterHealth <= 0)
-            winner = heroCharacter;
-        
-        currentTurn = monsterCharacter;
- 
+        Console.WriteLine("Sorry, you entered an invalid number, please try again");
+        continue;
     }
 
-    else if (currentTurn == monsterCharacter)
+    if (numericValue < 5 || 10 < numericValue)
     {
-        heroHealth -= healthLost;
-        nextCharacterHealth = heroHealth;
-        if (nextCharacterHealth <= 0)
-            winner = monsterCharacter;
-        
-        currentTurn = heroCharacter;
-        
+        validInput = false;
+        Console.WriteLine($"You entered {numericValue}. Please, enter an integer value between 5 and 10");
     }
 
-    Console.WriteLine($"{currentTurn} was damaged and lost {healthLost} and now has {nextCharacterHealth} health.");
-}
+} while (!validInput);
 
-
-Console.WriteLine($"{winner} wins!");
+Console.WriteLine($"Your input value ({numericValue}) has been accepted.");
