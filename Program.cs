@@ -1,35 +1,28 @@
 ﻿// Exercise - Complete a challenge activity to differentiate between do and while iteration statements
 
-// Code project 2 - write code that validates string input
+// Code project 2 - Write code that processes the contents of a string array
 
-string[] roles = new string[3] { "administrator", "manager", "user"};
-string? userInput;
-bool validInput = false;
+string[] myStrings = new string[2] { "I like pizza. I like roast chicken. I like salad", "I like all three of the menu choices" };
 
-Console.WriteLine("Enter your role name (Administrator, Manager, or User)");
+int periodLocation = 0;
 
-do
+for (int i = 0; i < myStrings.Length; i++)
 {
-    userInput = Console.ReadLine();
-    userInput = userInput.Trim().ToLower();
+    periodLocation = myStrings[i].IndexOf(".");
 
-    for (int i = 0; i < roles.Length; i++)
+    if (periodLocation < 0)
     {
-        if (roles[i] == userInput)
-        {
-            validInput = true;
-            break;
-        }
+        Console.WriteLine(myStrings[i]);
+        continue;
     }
 
-    if (validInput)
-        continue;
-
-    Console.WriteLine($"The role name that you entered, \"{userInput}\" is not valid. Enter your role name (Administrator, Manager, or User)");
-
-
-} while (!validInput);
-
-Console.WriteLine($"Your input value ({userInput}) has been accepted.");
+    while (0 < periodLocation)
+    {
+        Console.WriteLine(myStrings[i].Substring(0, periodLocation));
+        myStrings[i] = myStrings[i].Remove(0, periodLocation + 1).TrimStart();
+        periodLocation = myStrings[i].IndexOf(".");
+    }
+    Console.WriteLine(myStrings[i]);
+}
 
 
