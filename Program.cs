@@ -355,8 +355,86 @@ do
             break;
 
         case "4":
+
+            for (int i = 0; i < petCount; i++)
+            {
+                string currentValue;
+                bool onlySpacesString;
+
+                // Validate wheter Nickname field is empty -> string at index 3 in the array ourAnimals[i,?]
+                validEntry = true;
+                currentValue = ourAnimals[i, 3].Remove(0, 10);
+                onlySpacesString = currentValue.Replace(" ", "").Length == 0 ? true : false;
+
+                if (currentValue == null || currentValue.Length == 0 || onlySpacesString)
+                {
+                    validEntry = false;
+                }
+
+                while (!validEntry)
+                {
+                    Console.WriteLine($"Enter a nickname for {ourAnimals[i, 0]}");
+                    readResult = Console.ReadLine();
+                    if (readResult != null)
+                    {
+                        animalNickname = readResult.ToLower();
+
+                        onlySpacesString = animalNickname.Replace(" ", "").Length == 0 ? true : false;
+
+                        if (animalNickname == null || animalNickname.Length == 0 || onlySpacesString)
+                        {
+                            validEntry = false;
+                        }
+
+                        else
+                        {
+                            validEntry = true;
+                            ourAnimals[i, 3] = "Nickname: " + animalNickname;
+                        }
+                    }
+
+                }
+
+
+                // Validate wheter Personality description field is empty -> string at index 3 in the array ourAnimals[i,?]
+                validEntry = true;
+                currentValue = ourAnimals[i, 5].Remove(0, 13);
+                onlySpacesString = currentValue.Replace(" ", "").Length == 0 ? true : false;
+
+                if (currentValue == null || currentValue.Length == 0 || onlySpacesString)
+                {
+                    validEntry = false;
+                }
+
+                while (!validEntry)
+                {
+                    Console.WriteLine($"Enter a personality description for {ourAnimals[i, 0]} (likes or dislikes, tricks, energy level)");
+                    readResult = Console.ReadLine();
+                    if (readResult != null)
+                    {
+                        animalPersonalityDescription = readResult.ToLower();
+
+                        onlySpacesString = animalPersonalityDescription.Replace(" ", "").Length == 0 ? true : false;
+
+                        if (animalPersonalityDescription == null || animalPersonalityDescription.Length == 0 || onlySpacesString)
+                        {
+                            validEntry = false;
+                        }
+
+                        else
+                        {
+                            validEntry = true;
+                            ourAnimals[i, 5] = "Personality: " + animalPersonalityDescription;
+                        }
+                    }
+
+
+                }
+
+            }
+
             // Ensure animal nicknames and personality descriptions are complete
-            Console.WriteLine("Challenge Project - please check back soon to see progress.");
+            Console.WriteLine("Nickname and personality description fields are complete for all of our friends.");
             Console.WriteLine("Press the Enter key to continue.");
             readResult = Console.ReadLine();
             break;
