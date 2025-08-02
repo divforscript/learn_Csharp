@@ -1,36 +1,18 @@
-﻿// Challenge: Write code to reverse each word in a message
+﻿// Exercise: Complete a challenge to parse a string of orders, sort the orders and tag possible errors
 
-string pangram = "The quick brown fox jumps over the lazy dog";
+string orderStream = "B123,C234,A345,C15,B177,G3003,C235,B179";
 
-string[] eachWord = pangram.Split(" ");
+string[] orders = orderStream.Split(",");
+Array.Sort(orders);
 
-int pangramLength = eachWord.Length;
-string reversedSentence = new string("");
-
-for (int i = 0; i < pangramLength; i++)
+foreach (string order in orders)
 {
-    char[] eachLetter = eachWord[i].ToCharArray();
-    Array.Reverse(eachLetter);
+    string error = "";
+    if (order.Length != 4)
+    {
+        error = "- Error";
+    }
 
-    string reversedWord = String.Join("", eachLetter);
-
-    eachWord[i] = reversedWord;
+    Console.WriteLine($"{order,-7} {error}");
 }
 
-reversedSentence = String.Join(" ", eachWord);
-Console.WriteLine(reversedSentence);
-
-
-
-// Version 2:
-
-// for (int i = 0; i < pangramLength; i++)
-// {
-//     char[] eachLetter = eachWord[i].ToCharArray();
-//     Array.Reverse(eachLetter);
-
-//     eachWord[i] = new string(eachLetter);
-// }
-
-// reversedSentence = String.Join(" ", eachWord);
-// Console.WriteLine(reversedSentence);
