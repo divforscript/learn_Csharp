@@ -1,18 +1,15 @@
-﻿// Exercise: Complete a challenge to parse a string of orders, sort the orders and tag possible errors
+﻿//  Exercise: Explore string interpolation
 
-string orderStream = "B123,C234,A345,C15,B177,G3003,C235,B179";
+int invoiceNumber = 1201;
+decimal productShares = 25.4568m;
+decimal subtotal = 2750.00m;
+decimal taxPercentage = .15825m;
+decimal total = 3185.19m;
 
-string[] orders = orderStream.Split(",");
-Array.Sort(orders);
+Console.WriteLine($"Invoice Number: {invoiceNumber}");
+Console.WriteLine($"   Shares: {productShares:N3} Product");
+Console.WriteLine($"     Sub Total: {subtotal:C}");
+Console.WriteLine($"           Tax: {taxPercentage:P2}");
+Console.WriteLine($"     Total Billed: {total:C}");
 
-foreach (string order in orders)
-{
-    string error = "";
-    if (order.Length != 4)
-    {
-        error = "- Error";
-    }
-
-    Console.WriteLine($"{order,-7} {error}");
-}
 
