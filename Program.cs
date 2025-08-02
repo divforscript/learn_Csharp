@@ -1,18 +1,36 @@
-﻿// Data types in C#
+﻿// Challenge: Write code to reverse each word in a message
 
-int value1 = 11;
-decimal value2 = 6.2m;
-float value3 = 4.3f;
+string pangram = "The quick brown fox jumps over the lazy dog";
 
-// Your code here to set result1
-// Hint: You need to round the result to nearest integer (don't just truncate)
-int result1 = Convert.ToInt32(value1 / value2);
-Console.WriteLine($"Divide value1 by value2, display the result as an int: {result1}");
+string[] eachWord = pangram.Split(" ");
 
-// Your code here to set result2
-decimal result2 = value2 / (decimal)value3;
-Console.WriteLine($"Divide value2 by value3, display the result as a decimal: {result2}");
+int pangramLength = eachWord.Length;
+string reversedSentence = new string("");
 
-// Your code here to set result3
-float result3 = value3 / value1;
-Console.WriteLine($"Divide value3 by value1, display the result as a float: {result3}");
+for (int i = 0; i < pangramLength; i++)
+{
+    char[] eachLetter = eachWord[i].ToCharArray();
+    Array.Reverse(eachLetter);
+
+    string reversedWord = String.Join("", eachLetter);
+
+    eachWord[i] = reversedWord;
+}
+
+reversedSentence = String.Join(" ", eachWord);
+Console.WriteLine(reversedSentence);
+
+
+
+// Version 2:
+
+// for (int i = 0; i < pangramLength; i++)
+// {
+//     char[] eachLetter = eachWord[i].ToCharArray();
+//     Array.Reverse(eachLetter);
+
+//     eachWord[i] = new string(eachLetter);
+// }
+
+// reversedSentence = String.Join(" ", eachWord);
+// Console.WriteLine(reversedSentence);
