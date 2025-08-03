@@ -1,6 +1,8 @@
-﻿// Guided Project: Contoso Pet Application - Using string helper methods to match a word with pet description or personality.
+﻿// Project: Contoso Pet Application - Badge project
 
-// #1 the ourAnimals array will store the following: 
+using System;
+
+// ourAnimals array will store the following: 
 string animalSpecies = "";
 string animalID = "";
 string animalAge = "";
@@ -9,16 +11,16 @@ string animalPersonalityDescription = "";
 string animalNickname = "";
 string suggestedDonation = "";
 
-// #2 variables that support data entry
+// variables that support data entry
 int maxPets = 8;
 string? readResult;
 string menuSelection = "";
 decimal decimalDonation = 0.00m;
 
-// #3 array used to store runtime data, there is no persisted data
+// array used to store runtime data
 string[,] ourAnimals = new string[maxPets, 7];
 
-// #4 create sample data ourAnimals array entries
+// sample data ourAnimals array entries
 for (int i = 0; i < maxPets; i++)
 {
     switch (i)
@@ -56,11 +58,12 @@ for (int i = 0; i < maxPets; i++)
         case 3:
             animalSpecies = "cat";
             animalID = "c4";
-            animalAge = "3";
-            animalPhysicalDescription = "Medium sized, long hair, yellow, female, about 10 pounds. Uses litter box.";
-            animalPersonalityDescription = "A people loving cat that likes to sit on your lap.";
-            animalNickname = "Lion";
+            animalAge = "";
+            animalPhysicalDescription = "";
+            animalPersonalityDescription = "";
+            animalNickname = "lion";
             suggestedDonation = "";
+
             break;
 
         default:
@@ -86,11 +89,10 @@ for (int i = 0; i < maxPets; i++)
     {
         decimalDonation = 45.00m; // if suggestedDonation NOT a number, default to 45.00
     }
-
     ourAnimals[i, 6] = $"Suggested Donation: {decimalDonation:C2}";
 }
 
-// #5 display the top-level menu options
+//top-level menu options
 do
 {
     // NOTE: the Console.Clear method is throwing an exception in debug sessions
@@ -108,7 +110,7 @@ do
         menuSelection = readResult.ToLower();
     }
 
-    // use switch-case to process the selected menu option
+    // switch-case to process the selected menu option
     switch (menuSelection)
     {
         case "1":
@@ -120,46 +122,84 @@ do
                     Console.WriteLine();
                     for (int j = 0; j < 7; j++)
                     {
-                        Console.WriteLine(ourAnimals[i, j]);
+                        Console.WriteLine(ourAnimals[i, j].ToString());
                     }
                 }
             }
-            Console.WriteLine("\n\rPress the Enter key to continue");
+
+            Console.WriteLine("\r\nPress the Enter key to continue");
             readResult = Console.ReadLine();
 
             break;
 
         case "2":
-            // Display all dogs with a specified characteristic
+            // #1 Display all dogs with a multiple search characteristics
             string dogCharacteristic = "";
+            string[] dogCharacteristicsArray = new string[] { };
 
             while (dogCharacteristic == "")
             {
-                // have the user enter physical characteristics to search for
-                Console.WriteLine($"\nEnter one desired dog characteristics to search for");
+                // #2 have user enter multiple comma separated characteristics to search for
+                Console.WriteLine($"\r\nEnter dog characteristics to search for separated by commas:");
                 readResult = Console.ReadLine();
                 if (readResult != null)
                 {
                     dogCharacteristic = readResult.ToLower().Trim();
+                    dogCharacteristicsArray = dogCharacteristic.Replace(" ", "").Split(",");
+                    Array.Sort(dogCharacteristicsArray);
+                    Console.WriteLine();
                 }
             }
 
-            bool noMatchesDog = true;
 
-            // #6 loop through the ourAnimals array to search for matching animals
+            bool noMatchesDog = true;
+            string dogDescription = "";
+
+            // #4 update to "rotating" animation with countdown
+            string[] searchingIcons = { "  | ", "  / ", " -- ", "  \\ ", "  * " };
+
+            // loop ourAnimals array to search for matching animals
             for (int i = 0; i < maxPets; i++)
             {
+
                 if (ourAnimals[i, 1].Contains("dog"))
                 {
-                    string dogDescription = "";
-                    dogDescription = ourAnimals[i, 4] + "\n" + ourAnimals[i, 5];
 
-                    // #7 Search combined descriptions and report results
-                    if (dogDescription.Contains(dogCharacteristic))
+                    // Search combined descriptions and report results
+                    dogDescription = ourAnimals[i, 4] + "\r\n" + ourAnimals[i, 5];
+
+                    // for (int j = 5; j > -1 ; j--)
+                    // {
+                    // // #5 update "searching" message to show countdown 
+                    //     foreach (string icon in searchingIcons)
+                    //     {
+                    //         Console.Write($"\rsearching our dog {ourAnimals[i, 3]} for {dogCharacteristic} {icon}");
+                    //         Thread.Sleep(250);
+                    //     }
+
+                    //     Console.Write($"\r{new String(' ', Console.BufferWidth)}");
+                    // }
+
+                    // #3a iterate submitted characteristic terms and search description for each term
+
+                    foreach (string characteristic in dogCharacteristicsArray)
                     {
-                        noMatchesDog = false;
-                        Console.WriteLine($"\nOur dog {ourAnimals[i, 3]} is a match!");
-                        Console.WriteLine(dogDescription);
+                        if (dogDescription.Contains(characteristic))
+                        {
+                            // #3b update message to reflect term 
+                            // #3c set a flag "this dog" is a match
+                            Console.WriteLine($"Our dog {ourAnimals[i, 3]} matches your search for {characteristic}");
+
+                            noMatchesDog = false;
+                        }
+
+                    }
+
+                    if (!noMatchesDog)
+                    {
+                        // #3d if "this dog" is match write match message + dog description
+                        Console.WriteLine($"{ourAnimals[i, 3]} ({ourAnimals[i, 0]})");
+                        Console.WriteLine(dogDescription + "\n");
                     }
 
                 }
@@ -170,8 +210,9 @@ do
                 Console.WriteLine("None of our dogs are a match found for: " + dogCharacteristic);
             }
 
-            Console.WriteLine("Press the Enter key to continue.");
+            Console.WriteLine("\n\rPress the Enter key to continue");
             readResult = Console.ReadLine();
+
             break;
 
         default:
@@ -179,4 +220,5 @@ do
     }
 
 } while (menuSelection != "exit");
+
 
