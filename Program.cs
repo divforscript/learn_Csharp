@@ -1,4 +1,4 @@
-﻿// Project: Contoso Pet Application - Badge project
+﻿// Project: Contoso Pet Application - Badge project - Add improved search animation
 
 using System;
 
@@ -168,27 +168,31 @@ do
                     // Search combined descriptions and report results
                     dogDescription = ourAnimals[i, 4] + "\r\n" + ourAnimals[i, 5];
 
-                    // for (int j = 5; j > -1 ; j--)
-                    // {
-                    // // #5 update "searching" message to show countdown 
-                    //     foreach (string icon in searchingIcons)
-                    //     {
-                    //         Console.Write($"\rsearching our dog {ourAnimals[i, 3]} for {dogCharacteristic} {icon}");
-                    //         Thread.Sleep(250);
-                    //     }
-
-                    //     Console.Write($"\r{new String(' ', Console.BufferWidth)}");
-                    // }
-
-                    // #3a iterate submitted characteristic terms and search description for each term
-
+                    //#3a iterate submitted characteristic terms and search description for each term
                     foreach (string characteristic in dogCharacteristicsArray)
                     {
-                        if (dogDescription.Contains(characteristic))
+                        // Fake search - Spinnig animation
+                        for (int j = 2; j > -1; j--)
+                        {
+                            // #5 update "searching" message to show countdown 
+                            foreach (string icon in searchingIcons)
+                            {
+                                Console.Write($"\rsearching... {characteristic} {icon}{j}");
+                                Thread.Sleep(250);
+                                Console.Write($"\r{new String(' ', Console.BufferWidth)}");
+                            }
+                        }
+
+                        int currentWordLength = characteristic.Length;
+                        int priorSpaceIndex = dogDescription.IndexOf(characteristic) - 1;
+                        int rearSpaceIndex = priorSpaceIndex + currentWordLength + 1;
+
+
+                        if (dogDescription.Contains(characteristic) && dogDescription[priorSpaceIndex] == ' ' && dogDescription[rearSpaceIndex] == ' ')
                         {
                             // #3b update message to reflect term 
                             // #3c set a flag "this dog" is a match
-                            Console.WriteLine($"Our dog {ourAnimals[i, 3]} matches your search for {characteristic}");
+                            Console.WriteLine($"\rOur dog {ourAnimals[i, 3].Remove(0, 10)} is a {characteristic} match!");
 
                             noMatchesDog = false;
                         }
