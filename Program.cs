@@ -1,26 +1,54 @@
-﻿// Exercise - Complete the challenge to create a reusable method
+﻿// Exercise - Use value and reference type parameters
 
+// By value
+int a = 3;
+int b = 4;
+int c = 0;
 
-string[] text = { "You have much to", "Today is a day to", "Whatever work you do", "This is an ideal time to" };
-string[] good = { "look forward to.", "try new things!", "is likely to succeed.", "accomplish your dreams!" };
-string[] bad = { "fear.", "avoid major decisions.", "may have unexpected outcomes.", "re-evaluate your life." };
-string[] neutral = { "appreciate.", "enjoy time with friends.", "should align with your values.", "get in tune with nature." };
+Multiply(a, b, c);
+Console.WriteLine($"global statement: {a} x {b} = {c}");
 
-Console.WriteLine("A fortune teller whispers the following words:");
-tellFortune();
-
-
-
-void tellFortune()
+void Multiply(int a, int b, int c)
 {
-    Random random = new Random();
-    int luck = random.Next(100);
+    c = a * b;
+    Console.WriteLine($"inside Multiply method: {a} x {b} = {c}");
+}
 
-    string[] fortune = (luck > 75 ? good : (luck < 25 ? bad : neutral));
 
-    for (int i = 0; i < 4; i++)
+// By reference - Arrays
+int[] array = {1, 2, 3, 4, 5};
+
+PrintArray(array);
+Clear(array);
+PrintArray(array);
+
+void PrintArray(int[] array)
+{
+    foreach (int a in array)
     {
-        Console.Write($"{text[i]} {fortune[i]} ");
+        Console.Write($"{a} ");
     }
+    Console.WriteLine();
+}
 
+
+void Clear(int[] array)
+{
+    for (int i = 0; i < array.Length; i++)
+    {
+        array[i] = 0;
+    }
+}
+
+// By reference - Strings
+string status = "Healthy";
+
+Console.WriteLine($"Start: {status}");
+SetHealth(false);
+Console.WriteLine($"End: {status}");
+
+void SetHealth(bool isHealthy) 
+{
+    status = (isHealthy ? "Healthy" : "Unhealthy");
+    Console.WriteLine($"Middle: {status}");
 }

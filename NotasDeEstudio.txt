@@ -28,4 +28,29 @@
 		decimal = 0.0m
 		object = null
 		
-		
+
+03-08-2025: 
+	Parámetros pasados a funciones por valor y por referencia.
+	
+	Pregunta a Copilot: please, explain to me why in 
+	
+	"string status = "Healthy";
+	Console.WriteLine($"Start: {status}");
+	SetHealth(status, false);
+	Console.WriteLine($"End: {status}");
+
+	void SetHealth(string status, bool isHealthy) 
+	{
+		status = (isHealthy ? "Healthy" : "Unhealthy");
+		Console.WriteLine($"Middle: {status}");
+	}" the output at console is "Start: Healthy
+	Middle: Unhealthy
+	End: Healthy", wether status is a reference variable
+
+
+	Key Concepts:
+	string is a reference type, but...
+	Method parameters in C# are passed by value by default, even for reference types.
+	
+	If you want to modify the original variable:
+	You can use the ref keyword:
