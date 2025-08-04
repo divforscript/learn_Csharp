@@ -54,3 +54,7 @@
 	
 	If you want to modify the original variable:
 	You can use the ref keyword:
+	
+	
+	
+	CUANDO TE POSTULAS A UNA VACANTE .NET Y EL ENTREVISTADOR TE PREGUNTA SI TIENES CERTIFICADO EN C#
