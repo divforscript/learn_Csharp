@@ -1,19 +1,51 @@
-﻿// Exercise - Return numbers from methods
+﻿// Exercise - Return arrays from methods
 
-double usd = 23.73;
-int vnd = UsdToVnd(usd);
+int target = 80;
+int[] coins = new int[] { 5, 5, 50, 25, 25, 10, 5 };
+int[,] result = TwoCoins(coins, target);
 
-Console.WriteLine($"${usd} USD = ${vnd} VND");
-Console.WriteLine($"${vnd} VND = ${VndToUsd(vnd)} USD");
-
-int UsdToVnd(double usd) 
+if (result.Length == 0)
 {
-    int rate = 23500;
-    return (int) (rate * usd);
+    Console.WriteLine("No two coins make change");
+}
+else
+{
+    Console.WriteLine("Change found at positions:");
+    for (int i = 0; i < result.GetLength(0); i++)
+    {
+        if (result[i, 0] == -1)
+        {
+            break;
+        }
+        Console.WriteLine($"{result[i, 0]},{result[i, 1]}");
+    }
 }
 
-double VndToUsd(int vnd) 
+
+
+int[,] TwoCoins(int[] coins, int target)
 {
-    double rate = 23500;
-    return vnd / rate;
+    int[,] result = { { -1, -1 }, { -1, -1 }, { -1, -1 }, { -1, -1 }, { -1, -1 } };
+    int count = 0;
+
+    for (int curr = 0; curr < coins.Length; curr++)
+    {
+        for (int next = curr + 1; next < coins.Length; next++)
+        {
+            if (coins[curr] + coins[next] == target)
+            {
+                result[count, 0] = curr;
+                result[count, 1] = next;
+                count++;
+            }
+
+            if (count == result.GetLength(0))
+            {
+                return result;
+            }
+
+        }
+    }
+
+    return (count == 0) ? new int[0, 0] : result;
 }
