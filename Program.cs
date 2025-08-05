@@ -1,59 +1,81 @@
-﻿// Exercise - Complete the challenge to add methods to make the game playable
+﻿// Guided Project - Contoso Petting Zoo
 
-// Dice mini-game challenge
-string? userInput;
-Random random = new Random();
+/*
+- There will be three visiting schools
+    - School A has six visiting groups (the default number)
+    - School B has three visiting groups
+    - School C has two visiting groups
 
-Console.WriteLine("Would you like to play? (Y/N)");
-if (ShouldPlay())
+- For each visiting school, perform the following tasks
+    - Randomize the animals
+    - Assign the animals to the correct number of groups
+    - Print the school name
+    - Print the animal groups
+*/
+
+using System;
+
+string[] pettingZoo =
 {
-    PlayGame();
+    "alpacas", "capybaras", "chickens", "ducks", "emus", "geese",
+    "goats", "iguanas", "kangaroos", "lemurs", "llamas", "macaws",
+    "ostriches", "pigs", "ponies", "rabbits", "sheep", "tortoises",
+};
+
+PlanSchoolVisit("School A");
+PlanSchoolVisit("School B", 3);
+PlanSchoolVisit("School C", 2);
+
+
+void PlanSchoolVisit(string schoolName, int groups = 6)
+{
+    RandomizeAnimals();
+    string[,] group = AssignGroup(groups);
+    Console.WriteLine(schoolName);
+    PrintGroup(group);
 }
 
 
-// Functions Area
-void PlayGame()
+void RandomizeAnimals()
 {
-    var play = true;
+    Random random = new Random();
 
-    while (play)
+    for (int i = 0; i < pettingZoo.Length; i++)
     {
-        var target = random.Next(1,6);
-        var roll = random.Next(1,7);
+        int r = random.Next(i, pettingZoo.Length);
 
-        Console.WriteLine($"Roll a number greater than {target} to win!");
-        Console.WriteLine($"You rolled a {roll}");
-        Console.WriteLine(WinOrLose(target,roll));
-        Thread.Sleep(1000);
-        Console.WriteLine("\nPlay again? (Y/N)");
-        
-        play = ShouldPlay();
+        string temp = pettingZoo[i];
+        pettingZoo[i] = pettingZoo[r];
+        pettingZoo[r] = temp;
     }
 }
 
-bool ShouldPlay()
+string[,] AssignGroup(int groups = 6)
 {
-    int count = 0;
-    var response = "?";
+    string[,] result = new string[groups, pettingZoo.Length / groups];
 
-    do
+    int start = 0;
+
+    for (int i = 0; i < groups; i++)
     {
-        Console.Write(0 < count ? "Wrong input. Would you like to play? (Y/N)\n" : "\r");
-        userInput = Console.ReadLine();
-        if (userInput != null)
+        for (int j = 0; j < result.GetLength(1); j++)
         {
-            response = userInput.Trim().ToLower();
-            count++;
+            result[i, j] = pettingZoo[start++];
         }
+    }
 
-    } while (!"yn".Contains(response));
-
-    return response == "y" ? true : false;
+    return result;
 }
 
-string WinOrLose(int die, int user)
-{   
-    var result = die < user? "win" : "lose";
-
-    return $"You {result}!";
+void PrintGroup(string[,] group) 
+{
+    for (int i = 0; i < group.GetLength(0); i++) 
+    {
+        Console.Write($"Group {i + 1}: ");
+        for (int j = 0; j < group.GetLength(1); j++) 
+        {
+            Console.Write($"{group[i,j]}  ");
+        }
+        Console.WriteLine();
+    }
 }
