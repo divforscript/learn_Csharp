@@ -1,51 +1,59 @@
-﻿// Exercise - Return arrays from methods
+﻿// Exercise - Complete the challenge to add methods to make the game playable
 
-int target = 80;
-int[] coins = new int[] { 5, 5, 50, 25, 25, 10, 5 };
-int[,] result = TwoCoins(coins, target);
+// Dice mini-game challenge
+string? userInput;
+Random random = new Random();
 
-if (result.Length == 0)
+Console.WriteLine("Would you like to play? (Y/N)");
+if (ShouldPlay())
 {
-    Console.WriteLine("No two coins make change");
+    PlayGame();
 }
-else
+
+
+// Functions Area
+void PlayGame()
 {
-    Console.WriteLine("Change found at positions:");
-    for (int i = 0; i < result.GetLength(0); i++)
+    var play = true;
+
+    while (play)
     {
-        if (result[i, 0] == -1)
-        {
-            break;
-        }
-        Console.WriteLine($"{result[i, 0]},{result[i, 1]}");
+        var target = random.Next(1,6);
+        var roll = random.Next(1,7);
+
+        Console.WriteLine($"Roll a number greater than {target} to win!");
+        Console.WriteLine($"You rolled a {roll}");
+        Console.WriteLine(WinOrLose(target,roll));
+        Thread.Sleep(1000);
+        Console.WriteLine("\nPlay again? (Y/N)");
+        
+        play = ShouldPlay();
     }
 }
 
-
-
-int[,] TwoCoins(int[] coins, int target)
+bool ShouldPlay()
 {
-    int[,] result = { { -1, -1 }, { -1, -1 }, { -1, -1 }, { -1, -1 }, { -1, -1 } };
     int count = 0;
+    var response = "?";
 
-    for (int curr = 0; curr < coins.Length; curr++)
+    do
     {
-        for (int next = curr + 1; next < coins.Length; next++)
+        Console.Write(0 < count ? "Wrong input. Would you like to play? (Y/N)\n" : "\r");
+        userInput = Console.ReadLine();
+        if (userInput != null)
         {
-            if (coins[curr] + coins[next] == target)
-            {
-                result[count, 0] = curr;
-                result[count, 1] = next;
-                count++;
-            }
-
-            if (count == result.GetLength(0))
-            {
-                return result;
-            }
-
+            response = userInput.Trim().ToLower();
+            count++;
         }
-    }
 
-    return (count == 0) ? new int[0, 0] : result;
+    } while (!"yn".Contains(response));
+
+    return response == "y" ? true : false;
+}
+
+string WinOrLose(int die, int user)
+{   
+    var result = die < user? "win" : "lose";
+
+    return $"You {result}!";
 }
