@@ -1,4 +1,4 @@
-﻿// Challenge Project - Create a Mini Game
+﻿// Challenge Project - Make the player consume food
 
 /*
 - The code declares the following variables:
@@ -26,22 +26,13 @@
 */
 
 // Specifications
-
 /*
-Terminate on resize
-This feature must:
-
-- Determine if the terminal was resized before allowing the game to continue
-- Clear the Console and end the game if the terminal was resized
-- Display the following message before ending the program: Console was resize. Program exiting.
-*/
-
-
-/*
-Add optional termination
-- Modify the existing Move method to support an optional parameter
-- If enabled, the optional parameter should detect nondirectional key input
-- If nondirectional input is detected, allow the game to terminate
+Check if the player consumed the food
+Create a method that uses the existing position variables of the player and food
+- The method should return a value
+- After the user moves the character, call your method to determine the following:
+    * Whether or not to use the existing method that changes player appearance
+    * Whether or not to use the existing method to redisplay the food
 */
 
 
@@ -53,37 +44,45 @@ int height = Console.WindowHeight - 1;
 int width = Console.WindowWidth - 5;
 bool shouldExit = false;
 
-// Console position of the player
-int playerX = 0;
-int playerY = 0;
-
-// Console position of the food
-int foodX = 0;
-int foodY = 0;
-
 // Available player and food strings
 string[] states = { "('-')", "(^-^)", "(X_X)" };
 string[] foods = { "@@@@@", "$$$$$", "#####" };
+int foodLen = foods[0].Length;
+
+// Console position of the player                       
+int playerX = 0;
+int playerY = 0;
+
+// Console position of the food                                   
+int foodX = 0;
+int foodY = 0;
+int[] foodXPositions = new int[foodLen];
 
 // Current player string displayed in the Console
 string player = states[0];
+int playerLen = player.Length;
 
 // Index of the current food
 int food = 0;
 
 
 ////////////////////////
-// Game Logic
+// Game run
 ///////////////////////
 
 InitializeGame();
+
 while (!shouldExit)
 {
-    // Without parameter: Accept any key
+    // Without parameter: Accept any key. Add "restrict" as parameter to avoid gather non-directional keys. 
     Move();
 
-    // With parameter: End the game if no-directional key was pressed
-    // Move("restrict");
+    // Check if all food was eaten
+    if (isAllFoodCollected())
+    {
+        ShowFood();
+    }
+
 }
 Console.CursorVisible = true;
 /////////////////////////
@@ -108,8 +107,25 @@ void ShowFood()
     food = random.Next(0, foods.Length);
 
     // Update food position to a random location
-    foodX = random.Next(0, width - player.Length);
     foodY = random.Next(0, height - 1);
+
+    if (foodY == playerY)
+    {
+        do
+        {
+            foodX = random.Next(0, width - player.Length);
+
+        } while ((playerX < foodX + foodLen) || (foodX < playerX + playerLen));
+    }
+    else
+    {
+        foodX = random.Next(0, width - player.Length);
+    }
+
+    for (int i = 0; i < foodLen; i++)
+    {
+        foodXPositions[i] = foodX + i;
+    }
 
     // Display the food at the location
     Console.SetCursorPosition(foodX, foodY);
@@ -160,6 +176,7 @@ void Move(string mode = "f")
             break;
     }
 
+    // Game end conditions
     if (endGame)
     {
         shouldExit = true;
@@ -169,9 +186,7 @@ void Move(string mode = "f")
 
     if (TerminalResized())
     {
-
         Console.Clear();
-
         // Write message before exiting game
         Console.SetCursorPosition(0, 0);
         Console.WriteLine("Console was resized. Program exiting.");
@@ -194,15 +209,52 @@ void Move(string mode = "f")
     // Draw the player at the new location
     Console.SetCursorPosition(playerX, playerY);
     Console.Write(player);
+    updateEatenFood();
 }
 
 // Clears the console, displays the food and player
 void InitializeGame()
 {
     Console.Clear();
-    ShowFood();
     Console.SetCursorPosition(0, 0);
     Console.Write(player);
+
+    ShowFood();
 }
 
+void updateEatenFood()
+{
+    int lastPlayerX = playerX + playerLen - 1;
+    int lastFoodX = foodX + foodLen - 1;
 
+    if (playerY == foodY)
+    {
+        if (playerX == foodX)
+        {
+            Array.Clear(foodXPositions, 0, foodLen);
+        }
+        else if (playerX < foodX && foodX <= lastPlayerX)
+        {
+            Array.Clear(foodXPositions, 0, lastPlayerX - foodX + 1);
+        }
+        else if (playerX > foodX && playerX <= lastFoodX)
+        {
+            Array.Clear(foodXPositions, playerX - foodX, lastFoodX - playerX + 1);
+        }
+    }
+}
+
+bool isAllFoodCollected()
+{
+    bool response = true;
+    for (int i = 0; i < foodLen; i++)
+    {
+        if (foodXPositions[i] != 0)
+        {
+            response = false;
+            break;
+        }
+    }
+
+    return response;
+}
