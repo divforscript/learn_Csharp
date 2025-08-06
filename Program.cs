@@ -27,12 +27,26 @@
 
 // Specifications
 /*
-Check if the player consumed the food
-Create a method that uses the existing position variables of the player and food
-- The method should return a value
-- After the user moves the character, call your method to determine the following:
-    * Whether or not to use the existing method that changes player appearance
-    * Whether or not to use the existing method to redisplay the food
+In this challenge exercise, you need to create a method that determines if the player has consumed the food that affects their movement. When the player consumes the food string with value #####, the appearance is updated to (X_X). You'll add a feature to detect if the player appearance is (X_X), and if so, temporarily prevent the player from moving.
+
+You also want to add an optional feature that detects if the player appearance is (^-^) and if so, increase or decrease the right and left movement speeds by a value of 3 while that appearance is active. When the player state is ('-'), you want the speed to return to normal. You want to make this feature optional since consuming food in this state requires more
+
+
+Check if the player should freeze
+Create a method that checks if the current player appearance is (X_X)
+The method should return a value
+Before allowing the user to move the character, call your method to determine the following:
+Whether or not to use the existing method that freezes character movement
+Make sure the character is only frozen temporarily and the player can still move afterwards
+
+
+Add an option to increase player speed
+Modify the existing Move method to support an optional movement speed parameter
+Use the parameter to increase or decrease right and left movement speed by 3
+Create a method that checks if the current player appearance is (^-^)
+The method should return a value
+Call your method to determine if Move should use the movement speed parameter
+
 */
 
 
@@ -47,23 +61,27 @@ bool shouldExit = false;
 // Available player and food strings
 string[] states = { "('-')", "(^-^)", "(X_X)" };
 string[] foods = { "@@@@@", "$$$$$", "#####" };
-int foodLen = foods[0].Length;
 
 // Console position of the player                       
 int playerX = 0;
 int playerY = 0;
 
+// Index of the current food
+int food = 0;
+
 // Console position of the food                                   
 int foodX = 0;
 int foodY = 0;
-int[] foodXPositions = new int[foodLen];
+int foodLen = foods[0].Length;
+int firstFoodX = 0;
+int lastFoodX = 0;
+
 
 // Current player string displayed in the Console
 string player = states[0];
 int playerLen = player.Length;
 
-// Index of the current food
-int food = 0;
+
 
 
 ////////////////////////
@@ -75,12 +93,21 @@ InitializeGame();
 while (!shouldExit)
 {
     // Without parameter: Accept any key. Add "restrict" as parameter to avoid gather non-directional keys. 
-    Move();
-
-    // Check if all food was eaten
-    if (isAllFoodCollected())
+    try
     {
-        ShowFood();
+        Move();
+        updateEatenFood();
+
+        // Check if all food was eaten
+        if (AllFoodCollected())
+        {
+            ShowFood();
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("An error occurred: " + ex.Message);
+        Console.WriteLine("Stack Trace: " + ex.StackTrace);
     }
 
 }
@@ -88,64 +115,9 @@ Console.CursorVisible = true;
 /////////////////////////
 
 
-
-
 ////////////////////////
 /// Functions
 ///////////////////////
-
-// Returns true if the Terminal was resized 
-bool TerminalResized()
-{
-    return height != Console.WindowHeight - 1 || width != Console.WindowWidth - 5;
-}
-
-// Displays random food at a random location
-void ShowFood()
-{
-    // Update food to a random index
-    food = random.Next(0, foods.Length);
-
-    // Update food position to a random location
-    foodY = random.Next(0, height - 1);
-
-    if (foodY == playerY)
-    {
-        do
-        {
-            foodX = random.Next(0, width - player.Length);
-
-        } while ((playerX < foodX + foodLen) || (foodX < playerX + playerLen));
-    }
-    else
-    {
-        foodX = random.Next(0, width - player.Length);
-    }
-
-    for (int i = 0; i < foodLen; i++)
-    {
-        foodXPositions[i] = foodX + i;
-    }
-
-    // Display the food at the location
-    Console.SetCursorPosition(foodX, foodY);
-    Console.Write(foods[food]);
-}
-
-// Changes the player to match the food consumed
-void ChangePlayer()
-{
-    player = states[food];
-    Console.SetCursorPosition(playerX, playerY);
-    Console.Write(player);
-}
-
-// Temporarily stops the player from moving
-void FreezePlayer()
-{
-    System.Threading.Thread.Sleep(1000);
-    player = states[0];
-}
 
 // Reads directional input from the Console and moves the player
 void Move(string mode = "f")
@@ -209,8 +181,61 @@ void Move(string mode = "f")
     // Draw the player at the new location
     Console.SetCursorPosition(playerX, playerY);
     Console.Write(player);
-    updateEatenFood();
 }
+
+
+void updateEatenFood()
+{
+
+    if (playerY == foodY)
+    {
+        int lastPlayerX = playerX + playerLen - 1;
+
+        if (playerX >= firstFoodX && playerX <= lastFoodX)
+        {
+            lastFoodX = playerX - 1;
+        }
+
+        else if (playerX < firstFoodX && lastPlayerX >= foodX)
+        {
+            firstFoodX = lastPlayerX + 1;
+        }
+    }
+
+}
+
+bool AllFoodCollected()
+{
+    return lastFoodX < firstFoodX ? true : false;
+}
+
+// Changes the player to match the food consumed
+void ChangePlayer()
+{
+    player = states[food];
+    Console.SetCursorPosition(playerX, playerY);
+    Console.Write(player);
+}
+
+// Increment speed x3
+bool AcceleratePlayer()
+{
+    return player.Contains("^") ? true : false;
+}
+
+// Temporarily stops the player from moving
+bool ShouldFreeze()
+{
+    return player.Contains("X") ? true : false;
+}
+
+void FreezePlayer()
+{
+    System.Threading.Thread.Sleep(1000);
+    player = states[0];
+}
+
+
 
 // Clears the console, displays the food and player
 void InitializeGame()
@@ -222,39 +247,67 @@ void InitializeGame()
     ShowFood();
 }
 
-void updateEatenFood()
+// Displays random food at a random location
+void ShowFood()
 {
-    int lastPlayerX = playerX + playerLen - 1;
-    int lastFoodX = foodX + foodLen - 1;
+    // Update food to a random index
+    food = random.Next(0, foods.Length);
+    foodLen = foods[food].Length;
 
-    if (playerY == foodY)
+    // Update food position to a random location, taking care not overwrite the player
+    foodY = random.Next(0, height - 1);
+    if (foodY == playerY)
     {
-        if (playerX == foodX)
+        do
         {
-            Array.Clear(foodXPositions, 0, foodLen);
-        }
-        else if (playerX < foodX && foodX <= lastPlayerX)
-        {
-            Array.Clear(foodXPositions, 0, lastPlayerX - foodX + 1);
-        }
-        else if (playerX > foodX && playerX <= lastFoodX)
-        {
-            Array.Clear(foodXPositions, playerX - foodX, lastFoodX - playerX + 1);
-        }
+            foodX = random.Next(0, width - player.Length);
+
+        } while ((playerX < foodX + foodLen) || (foodX < playerX + playerLen));
     }
-}
-
-bool isAllFoodCollected()
-{
-    bool response = true;
-    for (int i = 0; i < foodLen; i++)
+    else
     {
-        if (foodXPositions[i] != 0)
-        {
-            response = false;
-            break;
-        }
+        foodX = random.Next(0, width - player.Length);
     }
 
-    return response;
+    // Register key food positions
+    firstFoodX = foodX;
+    lastFoodX = foodX + foodLen - 1;
+
+    // Display the food at the location
+    Console.SetCursorPosition(foodX, foodY);
+    Console.Write(foods[food]);
 }
+
+// Returns true if the Terminal was resized 
+bool TerminalResized()
+{
+    return height != Console.WindowHeight - 1 || width != Console.WindowWidth - 5;
+}
+
+
+
+
+
+/*
+if (playerX >= foodX && playerX <= foodX + foodLen - 1)
+        {
+            foodXPositions = new int[playerX - foodX];
+            foodLen = foodXPositions.Length;
+            for (int i = 0; i < foodLen; i++)
+            {
+                foodXPositions[i] = foodX + i;
+            }
+        }
+
+        else if (playerX < foodX && lastPlayerX >= foodX)
+        {
+            int lastFoodX = foodXPositions[foodLen - 1];
+            foodXPositions = new int[lastFoodX - lastPlayerX];
+            foodLen = foodXPositions.Length;
+            for (int i = 0; i < foodLen; i++)
+            {
+                foodXPositions[i] = lastPlayerX + 1 + i;
+            }
+        }
+
+*/
