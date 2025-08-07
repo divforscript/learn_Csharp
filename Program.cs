@@ -51,6 +51,7 @@ Call your method to determine if Move should use the movement speed parameter
 
 
 using System;
+using System.Net;
 
 Random random = new Random();
 Console.CursorVisible = false;
@@ -76,11 +77,9 @@ int foodLen = foods[0].Length;
 int firstFoodX = 0;
 int lastFoodX = 0;
 
-
 // Current player string displayed in the Console
 string player = states[0];
 int playerLen = player.Length;
-
 
 
 
@@ -93,21 +92,38 @@ InitializeGame();
 while (!shouldExit)
 {
     // Without parameter: Accept any key. Add "restrict" as parameter to avoid gather non-directional keys. 
-    try
-    {
-        Move();
-        updateEatenFood();
+    Move();
 
-        // Check if all food was eaten
-        if (AllFoodCollected())
-        {
-            ShowFood();
-        }
-    }
-    catch (Exception ex)
+    if (AteFood())
     {
-        Console.WriteLine("An error occurred: " + ex.Message);
-        Console.WriteLine("Stack Trace: " + ex.StackTrace);
+        switch (foods[food][0])
+        {
+            case '#':
+                ChangePlayer();
+
+                if (ShouldFreeze())
+                {
+                    FreezePlayer();
+                }
+
+                player = states[0];
+                break;
+
+            case '$':
+                ChangePlayer();
+                break;
+
+            case '@':
+                ChangePlayer();
+                break;
+        }
+
+    }
+
+    // Check if all food was eaten
+    if (AllFoodCollected())
+    {
+        ShowFood();
     }
 
 }
@@ -181,27 +197,32 @@ void Move(string mode = "f")
     // Draw the player at the new location
     Console.SetCursorPosition(playerX, playerY);
     Console.Write(player);
+
 }
 
 
-void updateEatenFood()
+bool AteFood()
 {
-
+    bool response = false;
     if (playerY == foodY)
     {
+
         int lastPlayerX = playerX + playerLen - 1;
 
         if (playerX >= firstFoodX && playerX <= lastFoodX)
         {
             lastFoodX = playerX - 1;
+            response = true;
         }
 
         else if (playerX < firstFoodX && lastPlayerX >= foodX)
         {
             firstFoodX = lastPlayerX + 1;
+            response = true;
         }
     }
 
+    return response;
 }
 
 bool AllFoodCollected()
@@ -213,6 +234,7 @@ bool AllFoodCollected()
 void ChangePlayer()
 {
     player = states[food];
+    playerLen = player.Length;
     Console.SetCursorPosition(playerX, playerY);
     Console.Write(player);
 }
@@ -255,18 +277,15 @@ void ShowFood()
     foodLen = foods[food].Length;
 
     // Update food position to a random location, taking care not overwrite the player
+    foodX = random.Next(0, width - playerLen);
     foodY = random.Next(0, height - 1);
+
     if (foodY == playerY)
     {
-        do
-        {
-            foodX = random.Next(0, width - player.Length);
-
-        } while ((playerX < foodX + foodLen) || (foodX < playerX + playerLen));
-    }
-    else
-    {
-        foodX = random.Next(0, width - player.Length);
+        if (foodX < playerX && playerX - foodX < foodLen)
+            foodY++;
+        else if (foodX >= playerX && foodX - playerX < playerLen)
+            foodY--;
     }
 
     // Register key food positions
