@@ -81,7 +81,8 @@ int lastFoodX = 0;
 string player = states[0];
 int playerLen = player.Length;
 
-
+// Set the default accelerate variable
+int speedMultiplier = 3;
 
 ////////////////////////
 // Game run
@@ -92,7 +93,15 @@ InitializeGame();
 while (!shouldExit)
 {
     // Without parameter: Accept any key. Add "restrict" as parameter to avoid gather non-directional keys. 
-    Move();
+
+    if (AcceleratePlayer())
+    {
+        Move(accelerate: true);
+    }
+    else
+    {
+        Move();
+    }
 
     if (AteFood())
     {
@@ -127,6 +136,7 @@ while (!shouldExit)
     }
 
 }
+Console.Clear();
 Console.CursorVisible = true;
 /////////////////////////
 
@@ -136,7 +146,8 @@ Console.CursorVisible = true;
 ///////////////////////
 
 // Reads directional input from the Console and moves the player
-void Move(string mode = "f")
+// Game modes => 'f': free, accept any key // 'r': restrict, only accept directional keys
+void Move(char mode = 'f', bool accelerate = false)
 {
     bool endGame = false;
     int lastX = playerX;
@@ -151,16 +162,16 @@ void Move(string mode = "f")
             playerY++;
             break;
         case ConsoleKey.LeftArrow:
-            playerX--;
+            playerX -= accelerate ? speedMultiplier : 1;
             break;
         case ConsoleKey.RightArrow:
-            playerX++;
+            playerX += accelerate ? speedMultiplier : 1;
             break;
         case ConsoleKey.Escape:
             shouldExit = true;
             break;
         default:
-            endGame = mode.Equals("restrict");
+            endGame = (mode == 'r');
             break;
     }
 
@@ -255,6 +266,14 @@ void FreezePlayer()
 {
     System.Threading.Thread.Sleep(1000);
     player = states[0];
+
+
+    // Clear any buffered key presses
+    while (Console.KeyAvailable)
+    {
+        Console.ReadKey(true); // true = don't display the key
+    }
+
 }
 
 
@@ -302,31 +321,3 @@ bool TerminalResized()
 {
     return height != Console.WindowHeight - 1 || width != Console.WindowWidth - 5;
 }
-
-
-
-
-
-/*
-if (playerX >= foodX && playerX <= foodX + foodLen - 1)
-        {
-            foodXPositions = new int[playerX - foodX];
-            foodLen = foodXPositions.Length;
-            for (int i = 0; i < foodLen; i++)
-            {
-                foodXPositions[i] = foodX + i;
-            }
-        }
-
-        else if (playerX < foodX && lastPlayerX >= foodX)
-        {
-            int lastFoodX = foodXPositions[foodLen - 1];
-            foodXPositions = new int[lastFoodX - lastPlayerX];
-            foodLen = foodXPositions.Length;
-            for (int i = 0; i < foodLen; i++)
-            {
-                foodXPositions[i] = lastPlayerX + 1 + i;
-            }
-        }
-
-*/
