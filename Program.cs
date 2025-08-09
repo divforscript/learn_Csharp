@@ -1,47 +1,28 @@
-﻿// Exercise - Monitor variables and execution flow
+﻿// Exercise - Implement a simple Try - Catch
 
-string? readResult;
-int startIndex = 0;
-bool goodEntry = false;
-
-int[] numbers = { 1, 2, 3, 4, 5 };
-
-// Display the array to the console.
-Console.Clear();
-Console.Write("\n\rThe 'numbers' array contains: { ");
-foreach (int number in numbers)
+try
 {
-    Console.Write($"{number} ");
+    Process1();
+}
+catch
+{
+    Console.WriteLine("An exception has occurred");
 }
 
-// To calculate a sum of array elements, 
-//  prompt the user for the starting element number.
-Console.WriteLine($"}}\n\r\n\rTo sum values 'n' through 5, enter a value for 'n':");
-while (goodEntry == false)
-{
-    readResult = Console.ReadLine();
-    goodEntry = int.TryParse(readResult, out startIndex);
+Console.WriteLine("Exit program");
 
-    if (startIndex > 5)
-    {
-        goodEntry = false;
-        Console.WriteLine("\n\rEnter an integer value between 1 and 5");
-    }
+static void Process1()
+{
+    WriteMessage();
 }
 
-// Display the sum and then pause.
-Console.WriteLine($"\n\rThe sum of numbers {startIndex} through {numbers.Length} is: {SumValues(numbers, startIndex - 1)}");
-
-Console.WriteLine("press Enter to exit");
-readResult = Console.ReadLine();
-
-// This method returns the sum of elements n through 5
-static int SumValues(int[] numbers, int n)
+static void WriteMessage()
 {
-    int sum = 0;
-    for (int i = n; i < numbers.Length; i++)
-    {
-        sum += numbers[i];
-    }
-    return sum;
+    double float1 = 3000.0;
+    double float2 = 0.0;
+    int number1 = 3000;
+    int number2 = 0;
+
+    Console.WriteLine(float1 / float2);
+    Console.WriteLine(number1 / number2);
 }
