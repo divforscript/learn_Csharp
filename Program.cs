@@ -1,4 +1,4 @@
-﻿// Exercise - Catch specific exception types
+﻿// Exercise - Catch multiple exceptions in a code block
 
 try
 {
@@ -31,10 +31,16 @@ static void WriteMessage()
     int number2 = 0;
     byte smallNumber;
 
-    Console.WriteLine(float1 / float2);
-    //Console.WriteLine(number1 / number2);
-
-    checked // (1)
+    try
+    {
+        Console.WriteLine(float1 / float2);
+        Console.WriteLine(number1 / number2);
+    }
+    catch (DivideByZeroException ex)
+    {
+        Console.WriteLine($"Exception caught in WriteMessage: {ex.Message}");
+    }
+    checked
     {
         smallNumber = (byte)number1;
     }
