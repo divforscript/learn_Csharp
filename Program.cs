@@ -1,4 +1,4 @@
-﻿// Exercise - Implement a simple Try - Catch
+﻿// Exercise - Complete a challenge activity for try-catch
 
 try
 {
@@ -13,7 +13,14 @@ Console.WriteLine("Exit program");
 
 static void Process1()
 {
-    WriteMessage();
+    try
+    {
+        WriteMessage();
+    }
+    catch
+    {
+        Console.WriteLine("Exception caught in Process1");
+    }
 }
 
 static void WriteMessage()
@@ -25,4 +32,5 @@ static void WriteMessage()
 
     Console.WriteLine(float1 / float2);
     Console.WriteLine(number1 / number2);
+
 }
