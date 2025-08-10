@@ -1,57 +1,25 @@
-﻿// Exercise - Catch multiple exceptions in a code block
+﻿// Exercise - Catch separate exception types in a code block
 
-try
-{
-    Process1();
-}
-catch
-{
-    Console.WriteLine("An exception has occurred");
-}
+// inputValues is used to store numeric values entered by a user
+string[] inputValues = new string[]{"three", "9999999999", "0", "2" };
 
-Console.WriteLine("Exit program");
-
-static void Process1()
+foreach (string inputValue in inputValues)
 {
+    int numValue = 0;
     try
     {
-        WriteMessage();
+        numValue = int.Parse(inputValue);
     }
-    catch (DivideByZeroException ex)
+    catch (FormatException)
     {
-        Console.WriteLine($"Exception caught in Process1: {ex.Message}");
+        Console.WriteLine("Invalid readResult. Please enter a valid number.");
+    }
+    catch (OverflowException)
+    {
+        Console.WriteLine("The number you entered is too large or too small.");
+    }
+    catch(Exception ex)
+    {
+        Console.WriteLine(ex.Message);
     }
 }
-
-static void WriteMessage()
-{
-    double float1 = 3000.0;
-    double float2 = 0.0;
-    int number1 = 3000;
-    int number2 = 0;
-    byte smallNumber;
-
-    try
-    {
-        Console.WriteLine(float1 / float2);
-        Console.WriteLine(number1 / number2);
-    }
-    catch (DivideByZeroException ex)
-    {
-        Console.WriteLine($"Exception caught in WriteMessage: {ex.Message}");
-    }
-    checked
-    {
-        smallNumber = (byte)number1;
-    }
-}
-
-/*(1)
-When performing integral type calculations that assign the value of one integral type to another integral type, the result depends on the overflow-checking context. In a checked context, the conversion succeeds if the source value is within the range of the destination type. Otherwise, an OverflowException is thrown. In an unchecked context, the conversion always succeeds, and proceeds as follows:
-
-If the source type is larger than the destination type, then the source value is truncated by discarding its "extra" most significant bits. The result is then treated as a value of the destination type.
-
-If the source type is smaller than the destination type, then the source value is either sign-extended or zero-extended so that it's of the same size as the destination type. Sign-extension is used if the source type is signed; zero-extension is used if the source type is unsigned. The result is then treated as a value of the destination type.
-
-If the source type is the same size as the destination type, then the source value is treated as a value of the destination type.
-*/
