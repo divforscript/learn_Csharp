@@ -1,4 +1,4 @@
-﻿// Exercise - Complete a challenge activity for try-catch
+﻿// Exercise - Catch specific exception types
 
 try
 {
@@ -17,9 +17,9 @@ static void Process1()
     {
         WriteMessage();
     }
-    catch
+    catch (DivideByZeroException ex)
     {
-        Console.WriteLine("Exception caught in Process1");
+        Console.WriteLine($"Exception caught in Process1: {ex.Message}");
     }
 }
 
@@ -32,5 +32,4 @@ static void WriteMessage()
 
     Console.WriteLine(float1 / float2);
     Console.WriteLine(number1 / number2);
-
 }
