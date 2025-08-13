@@ -17,8 +17,16 @@ is used to ensure that logic in the MakeChange method is working as
 expected.
 */
 
+// Exercise - Throw and catch exceptions in a C# console application
+/*
+    1. Add a try-catch pattern to the top-level statements
+    2. Create and throw exceptions in the MakeChange method
+    3. Complete the catch code block
+    4. Convert the MakeChange method from "string" to "void" and access exception properties
+*/
 
 string? readResult = null;
+
 bool useTestData = false;
 
 Console.Clear();
@@ -48,7 +56,7 @@ Console.WriteLine($"Expected till value: {registerCheckTillTotal}\n\r");
 
 var valueGenerator = new Random((int)DateTime.Now.Ticks);
 
-int transactions = 10;
+int transactions = 40;
 
 if (useTestData)
 {
@@ -58,7 +66,7 @@ if (useTestData)
 while (transactions > 0)
 {
     transactions -= 1;
-    int itemCost = valueGenerator.Next(2, 20);
+    int itemCost = valueGenerator.Next(2, 50);
 
     if (useTestData)
     {
@@ -78,20 +86,20 @@ while (transactions > 0)
     Console.WriteLine($"\t Using {paymentFives} five dollar bills");
     Console.WriteLine($"\t Using {paymentOnes} one dollar bills");
 
-    // MakeChange manages the transaction and updates the till 
-    string transactionMessage = MakeChange(itemCost, cashTill, paymentTwenties, paymentTens, paymentFives, paymentOnes);
-
-    // Backup Calculation - each transaction adds current "itemCost" to the till
-    if (transactionMessage == "transaction succeeded")
+    try
     {
+        // MakeChange manages the transaction and updates the till 
+        MakeChange(itemCost, cashTill, paymentTwenties, paymentTens, paymentFives, paymentOnes);
+
         Console.WriteLine($"Transaction successfully completed.");
         registerCheckTillTotal += itemCost;
     }
-    else
+    catch (InvalidOperationException e)
     {
-        Console.WriteLine($"Transaction unsuccessful: {transactionMessage}");
+        Console.WriteLine($"Could not complete transaction: {e.Message}");
     }
 
+    
     Console.WriteLine(TillAmountSummary(cashTill));
     Console.WriteLine($"Expected till value: {registerCheckTillTotal}\n\r");
     Console.WriteLine();
@@ -114,9 +122,8 @@ static void LoadTillEachMorning(int[,] registerDailyStartingCash, int[] cashTill
 }
 
 
-static string MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int fives = 0, int ones = 0)
+static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int fives = 0, int ones = 0)
 {
-    string transactionMessage = "";
 
     cashTill[3] += twenties;
     cashTill[2] += tens;
@@ -127,7 +134,7 @@ static string MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, i
     int changeNeeded = amountPaid - cost;
 
     if (changeNeeded < 0)
-        transactionMessage = "Not enough money provided.";
+        throw new InvalidOperationException("InvalidOperationException: Not enough money provided to complete the transaction.");
 
     Console.WriteLine("Cashier Returns:");
 
@@ -160,12 +167,8 @@ static string MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, i
     }
 
     if (changeNeeded > 0)
-        transactionMessage = "Can't make change. Do you have anything smaller?";
+        throw new InvalidOperationException("InvalidOperationException: The till is unable to make the correct change.");
 
-    if (transactionMessage == "")
-        transactionMessage = "transaction succeeded";
-
-    return transactionMessage;
 }
 
 static void LogTillStatus(int[] cashTill)
